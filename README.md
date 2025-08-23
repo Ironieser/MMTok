@@ -76,9 +76,6 @@ Visit our project homepage: **[project.ironieser.cc/mmtok](https://project.ironi
 
 We welcome contributions! Please feel free to submit issues and pull requests.
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
