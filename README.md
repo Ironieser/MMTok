@@ -30,13 +30,13 @@ Our key insight is that **multimodal information is complementary for vision tok
 
 ## 🏗️ Architecture
 
-![MMTok Architecture](images/blog/mmtok/mmtok.jpg)
+![MMTok Architecture](img/mmtok.jpg)
 
 Our multimodal framework combines vision and text information for efficient token selection.
 
 ## 📈 Performance Comparison
 
-![Performance Results](images/blog/mmtok/combined_plots.png)
+![Performance Results](img/combined_plots.png)
 
 Comprehensive comparison with state-of-the-art methods across multiple models and datasets.
 
