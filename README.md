@@ -1,5 +1,4 @@
-# MMTok
-
+# <img src="./img/logo.png" alt="MMTok Logo" width="40" height="40" /> MMTok
 **Multimodal Coverage Maximization for Efficient Inference of VLMs**
 
 [![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-orange)](https://project.ironieser.cc/mmtok)
