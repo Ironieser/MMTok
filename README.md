@@ -49,13 +49,14 @@ Comprehensive comparison with state-of-the-art methods across multiple models an
 
 ## 👥 Authors
 
-- **Sixun Dong** (Arizona State University, Work done during internship at Zoom)
+- **Sixun Dong*** (Arizona State University)
 - **Juhua Hu** (University of Washington)
-- **Mian Zhang** (UT Dallas, Work done during internship at ZoomM)
-- **Ming Yin** (Duke University, Work done during internship at ZoomM)
-- **Yanjie Fu** (Arizona State University)*
+- **Mian Zhang*** (UT Dallas)
+- **Ming Yin*** (Duke University)
+- **Yanjie Fu** (Arizona State University)
 - **Qi Qian** (Zoom Communications) - Corresponding Author
-
+  
+*Work done during internship at Zoom.
 ## 📚 Citation
 
 ```bibtex
