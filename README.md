@@ -80,7 +80,7 @@ We welcome contributions! Please feel free to submit issues and pull requests.
 
 ## 🙏 Acknowledgments
 
-We thank Zoom Video Communications for providing internship opportunities and research support. Special thanks go to our collaborators for their constructive feedback and support. In particular, Yebowen Hu offered valuable discussions and feedback, while Kaiqiang Song contributed many insightful discussions, extensive assistance with computational resource scheduling, and helpful exchanges that enriched our learning. We also acknowledge the support from Zoomies.
+We thank Zoom Communications for providing internship opportunities and research support. Special thanks go to our collaborators for their constructive feedback and support. In particular, Yebowen Hu offered valuable discussions and feedback, while Kaiqiang Song contributed many insightful discussions, extensive assistance with computational resource scheduling, and helpful exchanges that enriched our learning. We also acknowledge the support from Zoomies.
 
 ---
 
