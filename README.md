@@ -42,7 +42,7 @@ Comprehensive comparison with state-of-the-art methods across multiple models an
 
 ## 🚧 Coming Soon
 
-- [ ] Paper on arXiv
+- [x] Paper on arXiv
 - [ ] Code implementation
 - [ ] Detailed blog post
 - [ ] Chinese technical blog (知乎)
