@@ -1,10 +1,26 @@
-# <img src="./img/logo.png" alt="MMTok Logo" width="40" height="40" /> MMTok
-Multimodal Coverage Maximization for Efficient Inference of VLMs
+<!-- HERO (centered) -->
+
+<!-- HERO (left-aligned) -->
+<p align="center">
+  <img src="./img/logo.png" alt="MMTok Logo" width="60">
+  <img src="./img/mmtok_title.png" alt="MMTok Title" width="200">
+</p>
+
+# **Multimodal Coverage Maximization for Efficient Inference of VLMs**
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2508.18264">
+    <img src="https://img.shields.io/badge/Paper-arXiv%2025'08-orange?logo=arxiv&logoColor=white" alt="Paper"/>
+  </a>
+  <a href="https://github.com/Ironieser/MMTok">
+    <img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"/>
+  </a>
+  <a href="https://project.ironieser.cc/mmtok">
+    <img src="https://img.shields.io/badge/Homepage-Live-blue?logo=google-chrome&logoColor=white" alt="Homepage"/>
+  </a>
+</p>
 
 
-[![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-orange)](https://arxiv.org/abs/2508.18264)
-[![Code](https://img.shields.io/badge/Code-Coming%20Soon-orange)](https://github.com/Ironieser/MMTok)
-[![Homepage](https://img.shields.io/badge/Homepage-Live-blue)](https://project.ironieser.cc/mmtok)
 
 ## 🚀 Overview
 
