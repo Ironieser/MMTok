@@ -2,7 +2,7 @@
 Multimodal Coverage Maximization for Efficient Inference of VLMs
 
 
-[![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-orange)](https://project.ironieser.cc/mmtok)
+[![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-orange)](https://arxiv.org/abs/2508.18264)
 [![Code](https://img.shields.io/badge/Code-Coming%20Soon-orange)](https://github.com/Ironieser/MMTok)
 [![Homepage](https://img.shields.io/badge/Homepage-Live-blue)](https://project.ironieser.cc/mmtok)
 
@@ -60,12 +60,14 @@ Comprehensive comparison with state-of-the-art methods across multiple models an
 ## 📚 Citation
 
 ```bibtex
-@article{dong2025mmtok,
-  title={MMTok: Multimodal Coverage Maximization for Efficient Inference of VLMs},
-  author={Dong, Sixun and Hu, Juhua and Zhang, Mian and Yin, Ming and Fu, Yanjie and Qian, Qi},
-  journal={arXiv preprint},
-  year={2025},
-  note={Coming Soon}
+@misc{dong2025mmtok,
+      title={MMTok: Multimodal Coverage Maximization for Efficient Inference of VLMs}, 
+      author={Sixun Dong and Juhua Hu and Mian Zhang and Ming Yin and Yanjie Fu and Qi Qian},
+      year={2025},
+      eprint={2508.18264},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2508.18264}, 
 }
 ```
 
