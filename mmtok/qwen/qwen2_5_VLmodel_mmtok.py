@@ -151,14 +151,68 @@ class Qwen2_5_VL_MMTok(nn.Module):
 
         if select_pixel:
             question = self.get_question()
+            try:
+                from src.ttrv_pruning.mmtok_ttrv import question_from_context
+
+                question = question_from_context(self) or question
+            except ModuleNotFoundError:
+                pass
+            text_token_embedding = None
+            if input_ids is not None and inputs_embeds is not None:
+                text_mask = input_ids[0] != self.config.image_token_id
+                video_token_id = getattr(self.config, "video_token_id", None)
+                if video_token_id is not None:
+                    text_mask = text_mask & (input_ids[0] != video_token_id)
+                if attention_mask is not None and attention_mask.ndim == 2:
+                    text_mask = text_mask & attention_mask[0].to(device=text_mask.device, dtype=torch.bool)
+                if text_mask.any():
+                    text_token_embedding = inputs_embeds[0, text_mask].detach()
             token_retain_ratio = getattr(self._mmtok_core, "retain_ratio", float(os.environ.get("TOKEN_RETAIN_RATIO", "0.1")))
             target_vision_tokens = int(token_retain_ratio * image_embeds.shape[0])
             selection_method = os.environ.get("SELECTION_METHOD", "mmtok").lower()
 
+            cached_indices = None
             if selection_method == "mmtok":
-                selected_indices, selected_image_embeds = self._mmtok_core.apply_selection_preprocess_qwen(
-                    image_embeds, image_features, question, target_vision_tokens=target_vision_tokens
-                )
+                try:
+                    from src.ttrv_pruning.mmtok_ttrv import cached_mmtok_selection
+
+                    cached_indices = cached_mmtok_selection(
+                        self,
+                        input_ids=input_ids,
+                        attention_mask=attention_mask,
+                        num_visual_tokens=int(image_embeds.shape[0]),
+                        row_index=0,
+                    )
+                except ModuleNotFoundError:
+                    cached_indices = None
+
+            if selection_method == "mmtok":
+                if cached_indices is not None:
+                    selected_indices = cached_indices
+                    selected_tensor = torch.as_tensor(selected_indices, dtype=torch.long, device=image_embeds.device)
+                    selected_image_embeds = image_embeds[selected_tensor]
+                    del selected_tensor
+                else:
+                    selected_indices, selected_image_embeds = self._mmtok_core.apply_selection_preprocess_qwen(
+                        image_embeds,
+                        image_features,
+                        question,
+                        target_vision_tokens=target_vision_tokens,
+                        text_token_embedding=text_token_embedding,
+                    )
+                    try:
+                        from src.ttrv_pruning.mmtok_ttrv import remember_mmtok_selection
+
+                        remember_mmtok_selection(
+                            self,
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            num_visual_tokens=int(image_embeds.shape[0]),
+                            selected_indices=selected_indices,
+                            row_index=0,
+                        )
+                    except ModuleNotFoundError:
+                        pass
             elif selection_method == "divprune":
                 def DivPrune(visual_feature_vectors, target_vision_tokens=1):
                     # threshold_terms = int(round(threshold_ratio*image_feature_length))
@@ -201,7 +255,7 @@ class Qwen2_5_VL_MMTok(nn.Module):
 
             select_mask = torch.zeros(image_embeds.shape[0], dtype=torch.bool, device=image_embeds.device)
             select_mask[selected_indices] = True
-
+            keep_sequence = None
             img_mask = (input_ids == self.config.image_token_id)[0]
             st_idx = torch.nonzero(img_mask, as_tuple=True)[0]
 
@@ -209,22 +263,41 @@ class Qwen2_5_VL_MMTok(nn.Module):
                 first, last = st_idx[0].item(), st_idx[-1].item()
                 if len(selected_indices) == 0:
                     # Remove all vision tokens, keep text only
-                    position_ids = torch.cat([position_ids[:, :, :first], position_ids[:, :, last + 1 :]], dim=2)
-                    attention_mask = torch.cat([attention_mask[:, :first], attention_mask[:, last + 1 :]], dim=1)
-                    inputs_embeds = torch.cat([inputs_embeds[:, :first], inputs_embeds[:, last + 1 :]], dim=1)
+                    keep_sequence = torch.ones(input_ids.shape[1], dtype=torch.bool, device=input_ids.device)
+                    keep_sequence[first : last + 1] = False
+                    position_ids = position_ids[:, :, keep_sequence]
+                    if attention_mask is not None:
+                        attention_mask = attention_mask[:, keep_sequence]
+                    inputs_embeds = inputs_embeds[:, keep_sequence]
                 else:
                     img_mask[first : last + 1] = ~select_mask
                     img_mask = ~img_mask
-                    selected_positions = first + torch.tensor(selected_indices, device=img_mask.device)
+                    keep_sequence = img_mask.detach().clone()
+                    selected_positions = first + torch.as_tensor(
+                        selected_indices, dtype=torch.long, device=img_mask.device
+                    )
                     inputs_embeds[:, selected_positions] = selected_image_embeds
 
-                    position_ids = position_ids[:, :, img_mask]
-                    attention_mask = attention_mask[:, img_mask]
-                    inputs_embeds = inputs_embeds[:, img_mask]
+                    position_ids = position_ids[:, :, keep_sequence]
+                    if attention_mask is not None:
+                        attention_mask = attention_mask[:, keep_sequence]
+                    inputs_embeds = inputs_embeds[:, keep_sequence]
                     del selected_positions
+            try:
+                from src.ttrv_pruning.mmtok_ttrv import record_mmtok_stage
+
+                record_mmtok_stage(
+                    self,
+                    selected_indices=selected_indices,
+                    num_visual_tokens=int(image_embeds.shape[0]),
+                    row_index=0,
+                    keep_sequence=keep_sequence,
+                )
+            except ModuleNotFoundError:
+                pass
             del image_embeds, image_features, selected_indices, selected_image_embeds
-            del select_mask, img_mask, st_idx
-            del question, token_retain_ratio, target_vision_tokens, selection_method
+            del select_mask, img_mask, st_idx, keep_sequence
+            del question, text_token_embedding, token_retain_ratio, target_vision_tokens, selection_method, cached_indices
         outputs = self.language_model(
             input_ids=None,
             position_ids=position_ids,

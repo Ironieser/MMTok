@@ -171,7 +171,14 @@ class MMTokCore:
 
         return selected_tokens_batch, selected_indices_list
 
-    def apply_selection_preprocess_qwen(self, image_embeds, image_features, question_text, target_vision_tokens=None):
+    def apply_selection_preprocess_qwen(
+        self,
+        image_embeds,
+        image_features,
+        question_text,
+        target_vision_tokens=None,
+        text_token_embedding=None,
+    ):
         """
         Coverage-based subset selection for Qwen2.5-VL: select vision tokens
         to cover text (question only, or question+answer if provided) and vision set. Single-sample path.
@@ -182,6 +189,8 @@ class MMTokCore:
             question_text: Question string
             answer_text: Optional answer text (for compatibility; when no scout, use question only)
             target_vision_tokens: Target subset size (uses self.token_selector.target_vision_tokens if None)
+            text_token_embedding: Optional precomputed prompt-token embeddings. This keeps
+                FSDP-wrapped forwards from reaching through a stale pre-wrap embedding module.
 
         Returns:
             selected_indices: Indices of selected vision tokens
@@ -191,11 +200,16 @@ class MMTokCore:
             self.token_selector.target_vision_tokens = target_vision_tokens
 
 
-        text_for_embedding = f"Question: {question_text}"
-        if getattr(self, "clean_text", False):
-            text_for_embedding = self.text_processor.extract_keywords_simple(text_for_embedding)
+        if text_token_embedding is None or text_token_embedding.numel() == 0:
+            text_for_embedding = f"Question: {question_text}"
+            if getattr(self, "clean_text", False):
+                text_for_embedding = self.text_processor.extract_keywords_simple(text_for_embedding)
+            text_token_embedding = self._encode_text_with_token_pooling(text_for_embedding)
+        else:
+            if text_token_embedding.dim() == 1:
+                text_token_embedding = text_token_embedding.unsqueeze(0)
+            text_token_embedding = text_token_embedding.to(device=image_embeds.device, dtype=image_embeds.dtype)
 
-        text_token_embedding = self._encode_text_with_token_pooling(text_for_embedding)
         selected_features, selected_indices = self.select_vision_tokens(
             vision_features=image_embeds,
             vision_features_clip=image_features,
