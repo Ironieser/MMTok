@@ -35,6 +35,8 @@ MMTok is a novel **multimodal approach** for efficient vision-language model (VL
 - 🧠 **Multimodal Coverage:** The first framework to formulate vision token subset selection as a coverage maximization problem, ensuring selected tokens are both semantically relevant to the text query and informationally rich.
 - 📈 **Broad Compatibility:** Consistent improvements across multiple VLM architectures (LLaVA-1.5, LLaVA-NeXT, Qwen2.5-VL) and model sizes.
 
+Feel free to star🌟 the repo or cite✨ the paper if you find it interesting.😊
+
 ## 📅 Roadmap / TODO
 - [ ] **Batch Inference**: Support `batch_size > 1` for high-throughput scenarios.
 - [ ] **Video-VLM**: Extend MMTok to video understanding models (e.g., Video-LLaVA).
@@ -113,9 +115,9 @@ Setup details are in **[install.md](install.md)** (optional lmms-eval section).
 
 *💼 Work done during internship at Zoom.*
 
-## 📚 Citation
+## 📚 🌟 Citation
 
-If you find MMTok useful in your research, please cite:
+😊 If you find MMTok or this repo useful in your research, please star🌟 and cite✨:
 
 ```bibtex
 @inproceedings{dong2026mmtok,
