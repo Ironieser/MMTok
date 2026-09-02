@@ -55,12 +55,6 @@ MMTok is a novel **multimodal approach** for efficient vision-language model (VL
 2. **Coverage Computation**: Compute scores measuring how well vision tokens cover text semantics and preserve visual information.
 3. **Token Selection**: Select the optimal subset of vision tokens that maximizes multimodal coverage.
 
-## TODO
-
-[] Support Batchsize > 1
-[] Support Video-VLM
-
-
 ## 📦 Installation & Usage
 
 Full installation flow (create env → PyTorch → LLaVA → MMTok → optional lmms-eval) is available in **[install.md](install.md)**. Tested on **H100** and **A6000**.
